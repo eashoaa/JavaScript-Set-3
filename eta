@@ -1,0 +1,30 @@
+/**
+ * Calculates the travel time from one stop to another on a circular route.
+ *
+ * @param {string} firstStop The stop that the shuttle will leave
+ * @param {string} secondStop The stop that the shuttle will arrive at
+ * @param {object} routeMap The data describing the routes with detailed travel times between stops
+ * @returns {number} The time that it will take the shuttle to travel from firstStop to secondStop, or -1 if invalid input
+ */
+function eta(firstStop, secondStop, routeMap) {
+    const stops = Object.keys(routeMap).map(key => key.split(',')[0]); // Assuming keys are structured as 'StartStop,NextStop'
+    let startIndex = stops.indexOf(firstStop);
+    let endIndex = stops.indexOf(secondStop);
+    if (startIndex === -1 || endIndex === -1) return -1; // Stops must be valid
+
+    let totalTime = 0;
+    let currentIndex = startIndex;
+
+    while (currentIndex !== endIndex) {
+        let currentStop = stops[currentIndex];
+        let nextStop = stops[(currentIndex + 1) % stops.length];
+        let routeKey = `${currentStop},${nextStop}`;
+
+        if (!routeMap[routeKey]) return -1; // Ensure the routeKey is valid
+        totalTime += routeMap[routeKey].travel_time_mins;
+
+        currentIndex = (currentIndex + 1) % stops.length;
+    }
+
+    return totalTime;
+}
