@@ -1,0 +1,28 @@
+/**
+ * Relationship status
+ *
+ * Describes the relationship between two members.
+ *
+ * @param {string} fromMember The subject member
+ * @param {string} toMember The object member
+ * @param {object} socialGraph The relationship data
+ * @returns {string} The type of relationship
+ */
+function relationshipStatus(fromMember, toMember, socialGraph) {
+    if (fromMember === toMember) {
+        return "no relationship";
+    }
+
+    let fromFollowsTo = socialGraph[fromMember].following.includes(toMember);
+    let toFollowsFrom = socialGraph[toMember].following.includes(fromMember);
+
+    if (fromFollowsTo && toFollowsFrom) {
+        return "friends";
+    } else if (fromFollowsTo) {
+        return "follower";
+    } else if (toFollowsFrom) {
+        return "followed by";
+    } else {
+        return "no relationship";
+    }
+}
